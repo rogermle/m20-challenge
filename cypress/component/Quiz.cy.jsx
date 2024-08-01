@@ -1,28 +1,28 @@
 import Quiz from "../../client/src/components/Quiz"
+import questions from "../fixtures/questions.json"
 
 describe('Quiz Component', () => {
   beforeEach(() => {
     cy.intercept({
-        method: 'GET',
-        url: '/api/questions/random'
-      },
+      method: 'GET',
+      url: '/api/questions/random'
+    },
       {
-        fixture: 'questions.json',
+        body: questions,
         statusCode: 200
       }
-      ).as('getRandomQuestion')
-    });
+    ).as('getRandomQuestion')
+  });
 
   it('should start the quiz and display the first question', () => {
-    cy.wait('@getRandomQuestion')
     cy.mount(<Quiz />);
     cy.get('button').contains('Start Quiz').click();
-    cy.get('.card').should('be.visible');
+    cy.wait('@getRandomQuestion');
+    cy.get('.card').should('be.visible').and('contain', questions[0].question);
     cy.get('h2').should('not.be.empty');
   });
 
   it('should answer questions and complete the quiz', () => {
-    cy.wait('@getRandomQuestion')
     cy.mount(<Quiz />);
     cy.get('button').contains('Start Quiz').click();
 
@@ -34,7 +34,6 @@ describe('Quiz Component', () => {
   });
 
   it('should restart the quiz after completion', () => {
-    cy.wait('@getRandomQuestion')
     cy.mount(<Quiz />);
     cy.get('button').contains('Start Quiz').click();
 
