@@ -14,6 +14,7 @@ describe('Quiz Component', () => {
     });
 
   it('should start the quiz and display the first question', () => {
+    cy.wait('@getRandomQuestion')
     cy.mount(<Quiz />);
     cy.get('button').contains('Start Quiz').click();
     cy.get('.card').should('be.visible');
@@ -21,6 +22,7 @@ describe('Quiz Component', () => {
   });
 
   it('should answer questions and complete the quiz', () => {
+    cy.wait('@getRandomQuestion')
     cy.mount(<Quiz />);
     cy.get('button').contains('Start Quiz').click();
 
@@ -32,6 +34,7 @@ describe('Quiz Component', () => {
   });
 
   it('should restart the quiz after completion', () => {
+    cy.wait('@getRandomQuestion')
     cy.mount(<Quiz />);
     cy.get('button').contains('Start Quiz').click();
 
